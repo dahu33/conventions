@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
-# Paste CONVENTIONS.md into a project's CLAUDE.md, between the markers
+# Paste CONVENTIONS.md into a project's root AGENTS.md, between the markers
 # "<!-- conventions ... -->" and "<!-- /conventions -->", with its headings
 # demoted one level. The first time, the block goes before the project's
 # first "## " heading; afterwards it replaces itself.
 #
-#   ./sync.sh <checkout>...          update CLAUDE.md in each checkout
+#   ./sync.sh <checkout>...          update AGENTS.md in each checkout
 #   ./sync.sh --check <checkout>...  change nothing; exit 1 if any is behind
+#
+# AGENTS.md must be a regular file and CLAUDE.md beside it a symlink to it;
+# a checkout still laid out the other way round is refused.
 set -euo pipefail
 
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -22,7 +25,7 @@ for arg in "$@"; do
   esac
 done
 if [[ ${#checkouts[@]} -eq 0 ]]; then
-  sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//' >&2
+  sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//' >&2
   exit 2
 fi
 
@@ -42,9 +45,14 @@ trap 'rm -f "$block"' EXIT
 
 behind=0
 for checkout in "${checkouts[@]}"; do
-  file="$checkout/CLAUDE.md"
-  if [[ ! -f "$file" ]]; then
-    printf '%s: no CLAUDE.md\n' "$checkout" >&2
+  file="$checkout/AGENTS.md"
+  link="$checkout/CLAUDE.md"
+  if [[ -L "$file" || ! -f "$file" ]]; then
+    printf '%s: AGENTS.md must be a regular file (git rm AGENTS.md && git mv CLAUDE.md AGENTS.md && ln -s AGENTS.md CLAUDE.md)\n' "$checkout" >&2
+    exit 2
+  fi
+  if [[ ! -L "$link" || "$(readlink "$link")" != "AGENTS.md" ]]; then
+    printf '%s: CLAUDE.md must be a symlink to AGENTS.md (ln -s AGENTS.md CLAUDE.md)\n' "$checkout" >&2
     exit 2
   fi
   has_markers=0
