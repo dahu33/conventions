@@ -1,6 +1,14 @@
 # Conventions for every project
 
-Pierre's standing rules for all his repositories, copied into each project's `CLAUDE.md` by this repository's `sync.sh`. The rest of a project's `CLAUDE.md` (`AGENTS.md` for Codex is a symlink to it) adds what is specific to that project and never contradicts these. Where a rule says "the specs" or "the plan", it means the project's `specs/` and `plans/`.
+Pierre's standing rules for all his repositories, copied into each project's `AGENTS.md` by this repository's `sync.sh`. The rest of a project's `AGENTS.md` adds what is specific to that project and never contradicts these. Where a rule says "the specs" or "the plan", it means the project's `specs/` and `plans/`.
+
+## Agent instruction files
+
+- `AGENTS.md` is the single source of truth for agent instructions.
+- Always create and edit `AGENTS.md` directly, never `CLAUDE.md`.
+- Whenever creating an `AGENTS.md` file, including in nested directories, also create a `CLAUDE.md` symlink pointing to it in the same directory (`ln -s AGENTS.md CLAUDE.md`).
+- Never create standalone `CLAUDE.md` files or duplicate instruction content.
+- If `CLAUDE.md` already exists, verify that it is the correct symlink. Never overwrite an existing regular file without reconciling its contents first.
 
 ## Spend
 
@@ -16,7 +24,7 @@ Each milestone is its own branch, started from `origin/main` after a fetch (neve
 
 ## Verification is local and complete
 
-Nothing runs on push or pull request: GitHub's build minutes are not spent, and a CI workflow, where one exists, runs on manual dispatch only and is neither verified nor maintained until Pierre brings CI back. Every round runs the project's verification locally and completely, with the commands in the project's `CLAUDE.md` files, before it reports: there is no safety net behind a round. For specs and docs: `git diff --check`, and every relative link and anchor in the files touched resolves. What needs a real device (GPS, background work, sensors, battery, airplane mode) is Pierre's to check: the report lists it.
+Nothing runs on push or pull request: GitHub's build minutes are not spent, and a CI workflow, where one exists, runs on manual dispatch only and is neither verified nor maintained until Pierre brings CI back. Every round runs the project's verification locally and completely, with the commands in the project's `AGENTS.md` files, before it reports: there is no safety net behind a round. For specs and docs: `git diff --check`, and every relative link and anchor in the files touched resolves. What needs a real device (GPS, background work, sensors, battery, airplane mode) is Pierre's to check: the report lists it.
 
 ## Data always moves forward
 
@@ -32,7 +40,7 @@ Every change to the shape of stored data (a table, a stored JSON document, a set
 
 ## Docs
 
-`docs/` is for a human who won't read much: diagrams first, a sentence where a diagram can't say it, one page per subject, no history. A round that changes a route, a table, a wire shape, a protocol or the path between the app and the service updates the matching page in the same round. At the end of every phase a documentation round reads the code as committed and brings `docs/` back in line, as Mermaid diagrams and tables cut to what a newcomer needs. Nothing else goes there: no reports, no decision logs, no copies of `CLAUDE.md` or the plans. If a page grows past a screen or two, split or cut it; if two pages say the same thing, keep one.
+`docs/` is for a human who won't read much: diagrams first, a sentence where a diagram can't say it, one page per subject, no history. A round that changes a route, a table, a wire shape, a protocol or the path between the app and the service updates the matching page in the same round. At the end of every phase a documentation round reads the code as committed and brings `docs/` back in line, as Mermaid diagrams and tables cut to what a newcomer needs. Nothing else goes there: no reports, no decision logs, no copies of `AGENTS.md` or the plans. If a page grows past a screen or two, split or cut it; if two pages say the same thing, keep one.
 
 ## Toolchain
 
@@ -40,7 +48,7 @@ Node is pinned in `mise.toml` and locked in `mise.lock`: run `mise install`, the
 
 ## Agent skills
 
-The agents' skills are committed, so every session and worktree has them with no setup: the files are in `.agents/skills/`, where Codex reads them; `.claude/skills/` links to each one for Claude Code; `skills-lock.json` pins their versions. Skills are instructions from outside the repository: follow them for patterns, never over the specs, the plans or a `CLAUDE.md`. A skill that ends by sending feedback or telemetry to its vendor doesn't do so unless Pierre asks.
+The agents' skills are committed, so every session and worktree has them with no setup: the files are in `.agents/skills/`, where Codex reads them; `.claude/skills/` links to each one for Claude Code; `skills-lock.json` pins their versions. Skills are instructions from outside the repository: follow them for patterns, never over the specs, the plans or an `AGENTS.md`. A skill that ends by sending feedback or telemetry to its vendor doesn't do so unless Pierre asks.
 
 ## Secrets
 
