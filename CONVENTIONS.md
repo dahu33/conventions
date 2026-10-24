@@ -26,11 +26,11 @@ Each milestone is its own branch, started from `origin/main` after a fetch (neve
 
 Nothing runs on push or pull request: GitHub's build minutes are not spent, and a CI workflow, where one exists, runs on manual dispatch only and is neither verified nor maintained until Pierre brings CI back. Each project's `AGENTS.md` names its full verification, the checks to run while building, and the paths that count as specs and docs.
 
-- **While building**, whoever implements (a build round, a fix round) runs the checks for what they touched. A change to dependencies or lockfiles, toolchain pins, shared, build or test-runner configuration, or shared test setup touches everything: it gets the full verification.
-- **Before merge**, one full verification covers the final tree, normally run by whoever merges, right after bringing the branch up to date. A full run on the head before that update still counts: alone when the update brought nothing, with the reruns "One pull request per milestone" asks for when it brought commits.
-- **A result belongs to the commit it ran on.** Any later edit makes it stale, and nobody reports green from a stale result.
+- **While building**, whoever implements (a build round, a fix round) runs the checks for what they touched, as the project's `AGENTS.md` defines it; they don't replace the full verification before merge. A change to dependencies or lockfiles, toolchain pins, shared, build or test-runner configuration, or shared test setup touches everything: it gets the full verification.
+- **Before merge**, one full verification covers the final tree, normally run by whoever merges, right after bringing the branch up to date; an earlier full run counts only while it is still valid.
+- **A result belongs to the commit it ran on.** It stays valid across two changes only: bringing the branch up to date, with the reruns "One pull request per milestone" asks for when the update brought commits, and later commits confined to the specs and docs paths, checked as below. Any other edit makes it stale, and nobody reports green from a stale result.
 - **The pull request body** records the final gate: for each run, the commit, the exact commands and each result. Reviewers compare the recorded commit with the head and run only the targeted checks their own doubts call for, never the full suite as ritual.
-- **Specs, docs and plans only:** no full run; `git diff --check`, and every relative link and anchor in the files touched resolves.
+- **Specs and docs only:** a pull request whose whole diff against its base stays within the project's specs and docs paths needs no full run. It, like a commit within those paths after a full run, gets `git diff --check` over the branch's whole diff, committed and uncommitted, and every relative link and anchor in the files touched resolves; a command it adds or changes runs once, or a cheap probe of it, and the report says which.
 
 Every report says what it ran and what it did not. What needs a real device (GPS, background work, sensors, battery, airplane mode) is Pierre's to check: the report lists it.
 
