@@ -24,7 +24,15 @@ Each milestone is its own branch, started from `origin/main` after a fetch (neve
 
 ## Verification is local and complete
 
-Nothing runs on push or pull request: GitHub's build minutes are not spent, and a CI workflow, where one exists, runs on manual dispatch only and is neither verified nor maintained until Pierre brings CI back. Every round runs the project's verification locally and completely, with the commands in the project's `AGENTS.md` files, before it reports: there is no safety net behind a round. For specs and docs: `git diff --check`, and every relative link and anchor in the files touched resolves. What needs a real device (GPS, background work, sensors, battery, airplane mode) is Pierre's to check: the report lists it.
+Nothing runs on push or pull request: GitHub's build minutes are not spent, and a CI workflow, where one exists, runs on manual dispatch only and is neither verified nor maintained until Pierre brings CI back. Each project's `AGENTS.md` names its full verification, the checks to run while building, and the paths that count as specs and docs.
+
+- **While building**, whoever implements (a build round, a fix round) runs the checks for what they touched. A change to dependencies or lockfiles, toolchain pins, shared, build or test-runner configuration, or shared test setup touches everything: it gets the full verification.
+- **Before merge**, one full verification covers the final tree, normally run by whoever merges, right after bringing the branch up to date. A full run on the head before that update still counts: alone when the update brought nothing, with the reruns "One pull request per milestone" asks for when it brought commits.
+- **A result belongs to the commit it ran on.** Any later edit makes it stale, and nobody reports green from a stale result.
+- **The pull request body** records the final gate: for each run, the commit, the exact commands and each result. Reviewers compare the recorded commit with the head and run only the targeted checks their own doubts call for, never the full suite as ritual.
+- **Specs, docs and plans only:** no full run; `git diff --check`, and every relative link and anchor in the files touched resolves.
+
+Every report says what it ran and what it did not. What needs a real device (GPS, background work, sensors, battery, airplane mode) is Pierre's to check: the report lists it.
 
 ## Data always moves forward
 
