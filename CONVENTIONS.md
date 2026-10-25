@@ -32,7 +32,7 @@ Nothing runs on push or pull request: GitHub's build minutes are not spent, and 
 - **The pull request body** records the final gate: for each run, the commit, the exact commands and each result. Reviewers compare the recorded commit with the head and run only the targeted checks their own doubts call for, never the full suite as ritual.
 - **Specs and docs only:** a pull request whose whole diff against its base stays within the project's specs and docs paths needs no full run. It, like a commit within those paths after a full run, gets `git diff --check` over the branch's whole diff, committed and uncommitted, and every relative link and anchor in the files touched resolves; a command it adds or changes runs once, or a cheap probe of it, and the report says which.
 
-Every report says what it ran and what it did not. What needs a real device (GPS, background work, sensors, battery, airplane mode) is Pierre's to check: the report lists it.
+Whatever else a change touches, every relative link and anchor in the specs and docs files it touches resolves. Every report says what it ran and what it did not. What needs a real device (GPS, background work, sensors, battery, airplane mode) is Pierre's to check: the report lists it.
 
 ## Data always moves forward
 
