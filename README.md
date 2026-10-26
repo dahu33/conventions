@@ -1,6 +1,6 @@
 # conventions
 
-The rules every one of my projects shares, in one file: [CONVENTIONS.md](CONVENTIONS.md). The instruction files themselves, spend, alignment, the pull request workflow, local verification, forward-only migrations, specs, docs, toolchain, agent skills, secrets.
+The rules every one of my projects shares, in one file: [CONVENTIONS.md](CONVENTIONS.md). The instruction files themselves, spend, alignment, the pull request workflow, local verification, rounds and reports, tests and design checks, test devices, forward-only migrations, separable environments, specs, docs, toolchain, agent skills, search noise, secrets.
 
 A project's own `AGENTS.md` holds only what is specific to that project. The sibling [skills](https://github.com/dahu33/skills) repository holds my personal agent skills; this one holds the conventions.
 
@@ -18,8 +18,8 @@ A project's own `AGENTS.md` holds only what is specific to that project. The sib
 The block goes before the project's first `##` section the first time, and replaces itself afterwards. Both tools read the file in every worktree on every machine with no install step, which is why it is a committed copy and not a submodule, a subtree or a machine-wide link. `sync.sh` refuses a checkout whose `AGENTS.md` is still a symlink or whose `CLAUDE.md` is a regular file: convert it first (`git rm AGENTS.md && git mv CLAUDE.md AGENTS.md && ln -s AGENTS.md CLAUDE.md`).
 
 ```bash
-./sync.sh ~/git/perso/mapped ~/git/perso/osara   # update each checkout's AGENTS.md
-./sync.sh --check ~/git/perso/mapped             # exit 1 and say so if it is behind
+./sync.sh ~/git/perso/montopo ~/git/perso/osara   # update each checkout's AGENTS.md
+./sync.sh --check ~/git/perso/montopo             # exit 1 and say so if it is behind
 ```
 
 ## Change a convention
@@ -27,4 +27,8 @@ The block goes before the project's first `##` section the first time, and repla
 1. Change `CONVENTIONS.md` here on its own branch and squash-merge the pull request.
 2. For each project that carries it: a branch from `origin/main`, `sync.sh` on that checkout, one pull request, squash-merged.
 
-The projects that carry it: [mapped](https://github.com/dahu33/mapped), [osara](https://github.com/dahu33/osara).
+The projects that carry it:
+
+- [montopo](https://github.com/dahu33/montopo): an outdoor map app, offline topographic maps and GPS tracks, on Expo and Cloudflare.
+- [osara](https://github.com/dahu33/osara): a household-cooking app with an AI assistant, on Expo and Cloudflare.
+- [dowise](https://github.com/dahu33/dowise): a Splitwise-style app for shared expenses, on Expo and Cloudflare.

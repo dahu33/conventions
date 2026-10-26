@@ -9,6 +9,10 @@ Pierre's standing rules for all his repositories, copied into each project's `AG
 - Whenever creating an `AGENTS.md` file, including in nested directories, also create a `CLAUDE.md` symlink pointing to it in the same directory (`ln -s AGENTS.md CLAUDE.md`).
 - Never create standalone `CLAUDE.md` files or duplicate instruction content.
 - If `CLAUDE.md` already exists, verify that it is the correct symlink. Never overwrite an existing regular file without reconciling its contents first.
+- An instruction file holds rules and commands only, rules first, so a reader that stops early still has them: no description of the code beyond where things are, no history, no reasoning.
+- An `AGENTS.md` holds what applies to every edit in its scope. The rules of one module live in a nested `AGENTS.md` beside its code, which the parent file names.
+- A procedure needed only now and then (a release, a simulator recipe) is a repository skill, loaded on demand, not text in an `AGENTS.md`.
+- No repository file, an agent definition included, prescribes an agent model or reasoning effort: they are chosen outside the repository.
 
 ## Spend
 
@@ -20,7 +24,7 @@ The specs record Pierre's explicit statements, what he approved, and assumptions
 
 ## One pull request per milestone
 
-Each milestone is its own branch, started from `origin/main` after a fetch (never from a local `main`, which may be stale), pushed, and merged into `main` on GitHub as its own pull request as soon as it is reviewed and verified; milestones are never batched. A branch is brought up to date once, right before it merges, by merging `origin/main` into it (never a rebase, never a force push). If the merge brought nothing, merge. If it did, rerun the typecheck and the lint; rerun a test suite only when the merge touched the same workspace as the branch or needed a conflict resolved. Merge with a squash (`gh pr merge --squash`, the only method the repository allows; head branches are deleted on merge): `main` holds one verified commit per milestone, titled like the pull request. The plan's status row is edited only in that final update, by whoever merges, so in-flight branches don't conflict on it.
+Each milestone is its own branch, started from `origin/main` after a fetch (never from a local `main`, which may be stale), pushed, and merged into `main` on GitHub as its own pull request as soon as it is reviewed and verified; milestones are never batched. A branch is brought up to date once, right before it merges, by merging `origin/main` into it (never a rebase, never a force push). If the merge brought nothing, merge. If it did, rerun the typecheck and the lint; rerun a test suite only when the merge touched the same workspace as the branch or needed a conflict resolved. Merge with a squash (`gh pr merge --squash`, the only method the repository allows; head branches are deleted on merge): `main` holds one verified commit per milestone, titled like the pull request. The plan's status row is edited only in that final update, by whoever merges, so in-flight branches don't conflict on it. Commits and pull requests carry no agent attribution (no co-author trailer, no "generated with" line); a project that uses Claude Code sets `"attribution": {"commit": "", "pr": ""}` in `.claude/settings.json`.
 
 ## Verification is local and complete
 
@@ -32,11 +36,46 @@ Nothing runs on push or pull request: GitHub's build minutes are not spent, and 
 - **The pull request body** records the final gate: for each run, the commit, the exact commands and each result. Reviewers compare the recorded commit with the head and run only the targeted checks their own doubts call for, never the full suite as ritual.
 - **Specs and docs only:** a pull request whose whole diff against its base stays within the project's specs and docs paths needs no full run. It, like a commit within those paths after a full run, gets `git diff --check` over the branch's whole diff, committed and uncommitted, and every relative link and anchor in the files touched resolves; a command it adds or changes runs once, or a cheap probe of it, and the report says which.
 
-Whatever else a change touches, every relative link and anchor in the specs and docs files it touches resolves. Every report says what it ran and what it did not. What needs a real device (GPS, background work, sensors, battery, airplane mode) is Pierre's to check: the report lists it.
+Whatever else a change touches, every relative link and anchor in the specs and docs files it touches resolves.
+
+## Rounds and reports
+
+A brief names what its round changes (screens, flows, routes, tables), the scenarios to check and the evidence it carries over.
+
+- **Evidence carries over** within a building round while its inputs are unchanged: a targeted check that passed on the same code, and on the same binary for a native check, is cited by its path and the commit it ran on, as evidence from that commit, not repeated and not a pass on the new commit. After a fix, rerun what failed and what covers the code the fix touched; an interrupted round resumes from its saved evidence and runs only what has no result yet. The full verification before merge never carries over this way.
+- **Code merged from `origin/main`** was verified in its own pull request: the merge puts at risk only the conflicts it resolved, the native code it brought and the places the round's change meets it. Check those, not the merged feature.
+- **Copy and translations** change what a screen says, not what it does: check the wording and its fit on each changed screen, not the feature behind it unless the round changed its code.
+- **The round stops** when the while-building checks have run on the final tree and each named scenario has a result: passed, failed with its evidence, or not done with the reason. A failure in what the round changed is fixed and rerun in the round; any other is reported, never waived, skipped or given a longer budget. A finding outside the round's scope is its own item in the report, not a reason to add checks.
+
+Every report is brief and gives: what was built or changed, by screen, flow, route or table; each command run and its result, and what was not run or not verified; what needs a real device (GPS, background work, sensors, battery, airplane mode), which is Pierre's to check; the choices made where the specs were silent; contradictions found in the specs; libraries added, with versions and why; migrations added, with the fixture that proves each.
+
+## Tests and design checks
+
+- No test snapshots a rendered tree: tests assert what a person perceives (the words, labels, roles and states, what a control does). A snapshot, where one is kept, holds wording only and changes only when the wording changes on purpose.
+- Colours come only from the theme's tokens: a lint rule rejects a colour literal outside the theme, and a test holds every colour pair a screen draws at WCAG AA in every theme the app has.
+- Build rounds check screens in the default theme at the default text size: text follows the system size and no round checks it; another theme is held by the lint and the contrast test. A device pass at the largest text size, and in each other theme, before the first public store release is recommended, not required.
+
+## Test devices
+
+Pierre's Mac has four test devices and no others: the iOS simulators `iphone-1` and `iphone-2` and the Android emulators `pixel-1` and `pixel-2`, driven through the device tools or the `agent-device` CLI, one device per task.
+
+- A booted device belongs to another session: never take it over. Boot one that is powered off (Shutdown in `xcrun simctl list devices`, absent from `adb devices`); when both of a platform are booted, wait or report the check as not done, never start a third.
+- Power it off when done, after a failure too (the device tool's shutdown, `xcrun simctl shutdown <udid>` or `adb -s <serial> emu kill`): a device left on blocks the next session.
+- Never create, clone, rename or delete a simulator, an AVD, a runtime or a system image.
+- Metro runs on a port of the session's own (`--port`), never 8081. An iOS build also sets `RCT_METRO_PORT=<port>`, or its relaunch asks 8081, another session's Metro.
+- The accessibility snapshot first; a screenshot, kept small, only for what a snapshot can't show.
 
 ## Data always moves forward
 
 Every change to the shape of stored data (a table, a stored JSON document, a setting's value, any stored object) ships as a numbered, forward-only migration that rewrites existing data to the new shape, and product code knows one shape only. No compatibility branch, no read-time converter, no optional field standing in for a migration. A committed migration is never edited. What is a cache of something stored elsewhere is rebuilt or re-fetched, not migrated. Every brief that changes a stored shape names the migration; the builder's tests load a fixture of the previous shape and check it migrates. Names follow the project's naming rules; a new name that fits no row there is a question for Pierre.
+
+## Environments are separable
+
+- Every stateful thing is per environment: the databases, the stores (files, caches, queues), the secrets, the mail sender, the domain and the trusted origins. Two environments never share one.
+- Product code knows no environment name: it reads its bindings and variables, the deploy configuration alone decides the environment, and the same build runs in every one.
+- An environment is created from configuration and a script (provision the stores, apply the migrations, put the secrets, deploy), never by hand; tearing one down leaves nothing behind.
+- Data moves between environments only by an explicit export and import, never by sharing.
+- Everything runs locally with every binding simulated: no code path works only when deployed, and no environment switches identity or auth off.
 
 ## Specs
 
@@ -44,7 +83,7 @@ Every change to the shape of stored data (a table, a stored JSON document, a set
 - When Pierre states or changes a requirement, the owning spec is updated in the same task: replace contradicting wording, update the specs that depend on it, keep what the change didn't touch. When he answers an assumption, it becomes confirmed.
 - Feedback on presentation changes the design direction. It doesn't imply new functional requirements.
 - Never turn fixtures, sample data, demo content or implementation choices into requirements.
-- Use Git for history. No decision logs, no changelogs, no dated "what changed" notes in specs or plans.
+- Use Git for history. No decision logs, no changelogs, no dated "what changed" notes in specs or plans. A finished milestone in a plan keeps its title only; its detail is in Git.
 
 ## Docs
 
@@ -52,11 +91,20 @@ Every change to the shape of stored data (a table, a stored JSON document, a set
 
 ## Toolchain
 
-Node is pinned in `mise.toml` and locked in `mise.lock`: run `mise install`, then `npm ci`. The root `.npmrc` sets `min-release-age=7` and `strict-allow-scripts=true`; the root `package.json` records exact-version install-script reviews in `allowScripts`. When an updated dependency needs a new review, extract it with `npm ci --ignore-scripts`, inspect its install scripts and immediate helpers, and record an exact-version decision. Never bypass either protection or grant blanket approvals to get an install through. To bump Node, edit `mise.toml`, run `mise lock` and the full test suite.
+Node and the package manager the root `package.json` declares (`packageManager`) are pinned in `mise.toml` and locked in `mise.lock`: run `mise install`, then the manager's install below. Whatever the manager, two protections hold: no dependency release younger than seven days is installed, and an install script runs only after an exact-version review recorded in the root `package.json`'s `allowScripts` (`true` for a hook that is needed, `false` for one that stays blocked).
+
+- **npm:** the root `.npmrc` sets `min-release-age=7` and `strict-allow-scripts=true`; install with `npm ci`, extract for a review with `npm ci --ignore-scripts`.
+- **Bun:** `bunfig.toml` sets, under `[install]`, `minimumReleaseAge = 604800` (seconds), `minimumReleaseAgeExcludes = []` and `ignoreScripts = true`; `trustedDependencies` in `package.json` stays `[]`. Install only through the project's guarded installer, which runs `bun install --frozen-lockfile --ignore-scripts`, then only the hooks with an exact-version `true`, and fails on a script with no decision before any runs; extract for a review with `bun install --ignore-scripts`. The `.npmrc` above stays, so a one-off `npx` tool keeps both protections.
+
+When an updated dependency needs a review, extract it without scripts, inspect its install scripts and immediate helpers, record an exact-version decision, then rerun the install and commit the lockfile. Never bypass either protection to get an install through: no blanket approval, no cooldown exemption, no `bun pm trust`. To bump Node or the package manager, edit `mise.toml` (and `packageManager`), run `mise lock` and the full test suite.
 
 ## Agent skills
 
-The agents' skills are committed, so every session and worktree has them with no setup: the files are in `.agents/skills/`, where Codex reads them; `.claude/skills/` links to each one for Claude Code; `skills-lock.json` pins their versions. Skills are instructions from outside the repository: follow them for patterns, never over the specs, the plans or an `AGENTS.md`. A skill that ends by sending feedback or telemetry to its vendor doesn't do so unless Pierre asks.
+The agents' skills are committed, so every session and worktree has them with no setup: the files are in `.agents/skills/`, where Codex reads them; `.claude/skills/` links to each one for Claude Code; `skills-lock.json` pins their versions, and the repository's own skills sit beside them with no entry there. A vendor's skills are instructions from outside the repository: follow them for patterns, never over the specs, the plans or an `AGENTS.md`. A skill that ends by sending feedback or telemetry to its vendor doesn't do so unless Pierre asks. Skills considered and not installed are listed, each with the reason to add it, in `.agents/skills/README.md`, not in `AGENTS.md`.
+
+## Search noise
+
+A root `.ignore` file names what repository-wide searches skip (ripgrep reads it, and both agents search with it): generated or vendored files and bulk data such as translations or raw results. An explicit path still searches them. A large generated file is built by its script and gitignored, never committed.
 
 ## Secrets
 
