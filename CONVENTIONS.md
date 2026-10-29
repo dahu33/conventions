@@ -89,6 +89,20 @@ Every change to the shape of stored data (a table, a stored JSON document, a set
 
 `docs/` is for a human who won't read much: diagrams first, a sentence where a diagram can't say it, one page per subject, no history. A round that changes a route, a table, a wire shape, a protocol or the path between the app and the service updates the matching page in the same round. At the end of every phase a documentation round reads the code as committed and brings `docs/` back in line, as Mermaid diagrams and tables cut to what a newcomer needs. Nothing else goes there: no reports, no decision logs, no copies of `AGENTS.md` or the plans. If a page grows past a screen or two, split or cut it; if two pages say the same thing, keep one.
 
+## Issues
+
+A GitHub issue reports a problem or an idea. It is not a spec, a brief or a scoped ticket: scope, design and decisions are Pierre's, and live in the specs and plans once he states them.
+
+- **Labels** are `dimension:value`, one colour per dimension; GitHub's flat defaults (`bug`, `enhancement`…) are not used, and a new dimension or value is Pierre's call. An open issue carries one of each:
+  - `source:feedback` (sent from an app's Feedback button) or `source:manual` (opened by hand or by an agent);
+  - `kind:bug`, `kind:enhancement` or `kind:other`: the reporter's choice, relabelled freely;
+  - `status:triage` (not read yet), `status:needs-decision` (waiting on Pierre: whether to do it, or its scope) or `status:ready` (accepted; anyone can pick it up). Whoever reads a triage issue swaps the label for `status:needs-decision`; `status:ready` is Pierre's to set.
+- **Closing** removes the status label: the outcome is GitHub's close reason, completed or not planned. A duplicate gets the comment `Duplicate of #N`, naming the issue that stays open, and is closed as a duplicate. In progress is the linked pull request; blocked or waiting on information is a comment.
+- **Opening one**, by hand or by an agent: search the open issues first and comment on a match instead. The title is one line saying the problem or the idea. The body is a few lines, no headings, no boilerplate: for a bug, what happens, what was expected, how to see it and where (platform, app version and build, or environment); for an idea, what it would do and why, in the reporter's words. Observed evidence (an error message, a log line, where it fails) is welcome.
+- **What an issue never holds**, unless Pierre stated it, in which case it is quoted as his: a cause beyond what was observed, a fix, an implementation, a design, scope, acceptance criteria, tasks, an estimate or a decision. An agent that has ideas about any of these keeps them for its report to Pierre.
+- **No reporter in the issue:** no email, name or account id, in the issue or a comment.
+- `gh issue create --title … --body … --label source:manual --label kind:bug --label status:triage`.
+
 ## Toolchain
 
 Node and the package manager the root `package.json` declares (`packageManager`) are pinned in `mise.toml` and locked in `mise.lock`: run `mise install`, then the manager's install below. Whatever the manager, two protections hold: no dependency release younger than seven days is installed, and an install script runs only after an exact-version review recorded in the root `package.json`'s `allowScripts` (`true` for a hook that is needed, `false` for one that stays blocked).
