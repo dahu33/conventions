@@ -91,17 +91,11 @@ Every change to the shape of stored data (a table, a stored JSON document, a set
 
 ## Issues
 
-A GitHub issue reports a problem or an idea. It is not a spec, a brief or a scoped ticket: scope, design and decisions are Pierre's, and live in the specs and plans once he states them.
+An issue reports a problem or an idea; it is not a scoped ticket.
 
-- **Labels** are `dimension:value`, one colour per dimension; GitHub's flat defaults (`bug`, `enhancement`…) are not used, and a new dimension or value is Pierre's call. An open issue carries one of each:
-  - `source:feedback` (sent from an app's Feedback button) or `source:manual` (opened by hand or by an agent);
-  - `kind:bug`, `kind:enhancement` or `kind:other`: the reporter's choice, relabelled freely;
-  - `status:triage` (not read yet), `status:needs-decision` (waiting on Pierre: whether to do it, or its scope) or `status:ready` (accepted; anyone can pick it up). Whoever reads a triage issue swaps the label for `status:needs-decision`; `status:ready` is Pierre's to set.
-- **Closing** removes the status label: the outcome is GitHub's close reason, completed or not planned. A duplicate gets the comment `Duplicate of #N`, naming the issue that stays open, and is closed as a duplicate. In progress is the linked pull request; blocked or waiting on information is a comment.
-- **Opening one**, by hand or by an agent: search the open issues first and comment on a match instead. The title is one line saying the problem or the idea. The body is a few lines, no headings, no boilerplate: for a bug, what happens, what was expected, how to see it and where (platform, app version and build, or environment); for an idea, what it would do and why, in the reporter's words. Observed evidence (an error message, a log line, where it fails) is welcome.
-- **What an issue never holds**, unless Pierre stated it, in which case it is quoted as his: a cause beyond what was observed, a fix, an implementation, a design, scope, acceptance criteria, tasks, an estimate or a decision. An agent that has ideas about any of these keeps them for its report to Pierre.
-- **No reporter in the issue:** no email, name or account id, in the issue or a comment.
-- `gh issue create --title … --body … --label source:manual --label kind:bug --label status:triage`.
+- **Labels**, one of each per open issue, no others without Pierre: `source:feedback` (an app's Feedback button) or `source:manual`; `kind:bug`, `kind:enhancement` or `kind:other`; `status:triage` (unread), `status:needs-decision` (waiting on Pierre) or `status:ready` (accepted, set by Pierre only). Reading a triage issue moves it to `status:needs-decision`. Closing removes the status; a duplicate gets `Duplicate of #N` and is closed as one.
+- **Opening one:** search open issues first and comment on a match. A one-line title; a body of a few lines, no headings: for a bug, what happens, what was expected, how to see it, where (platform, version and build, or environment); for an idea, what and why, in the reporter's words. Observed evidence (an error, a log line) is fine.
+- **Never in an issue**, unless quoted from Pierre: a guessed cause, a fix, an implementation, a design, scope, acceptance criteria, tasks or a decision; those go in the agent's report. Never the reporter's email, name or account id.
 
 ## Toolchain
 
