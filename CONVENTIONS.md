@@ -89,6 +89,12 @@ Every change to the shape of stored data (a table, a stored JSON document, a set
 
 `docs/` is for a human who won't read much: diagrams first, a sentence where a diagram can't say it, one page per subject, no history. A round that changes a route, a table, a wire shape, a protocol or the path between the app and the service updates the matching page in the same round. At the end of every phase a documentation round reads the code as committed and brings `docs/` back in line, as Mermaid diagrams and tables cut to what a newcomer needs. Nothing else goes there: no reports, no decision logs, no copies of `AGENTS.md` or the plans. If a page grows past a screen or two, split or cut it; if two pages say the same thing, keep one.
 
+## Issues
+
+- **Labels**, one of each per open issue, no others without Pierre: `source:feedback` (an app's Feedback button) or `source:manual`; `kind:bug`, `kind:enhancement` or `kind:other`; `status:triage` (unread), `status:needs-decision` (waiting on Pierre) or `status:ready` (accepted, set by Pierre only). Reading a triage issue moves it to `status:needs-decision`. Closing removes the status; a duplicate gets `Duplicate of #N` and is closed as one.
+- **Opening one:** search open issues first and comment on a match. A one-line title; a body of a few lines, no headings: for a bug, what happens, what was expected, how to see it, where (platform, version and build, or environment); for an idea, what and why, in the reporter's words. Observed evidence (an error, a log line) is fine.
+- **Never in an issue**, unless explicitly requested or approved: a guessed cause, a fix, an implementation, a design, scope, acceptance criteria, tasks or a decision. Never the reporter's email, name or account id.
+
 ## Toolchain
 
 Node and the package manager the root `package.json` declares (`packageManager`) are pinned in `mise.toml` and locked in `mise.lock`: run `mise install`, then the manager's install below. Whatever the manager, two protections hold: no dependency release younger than seven days is installed, and an install script runs only after an exact-version review recorded in the root `package.json`'s `allowScripts` (`true` for a hook that is needed, `false` for one that stays blocked).
