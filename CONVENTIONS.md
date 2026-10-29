@@ -93,7 +93,7 @@ Every change to the shape of stored data (a table, a stored JSON document, a set
 
 - **Labels**, one of each per open issue, no others without Pierre: `source:feedback` (an app's Feedback button) or `source:manual`; `kind:bug`, `kind:enhancement` or `kind:other`; `status:triage` (unread), `status:needs-decision` (waiting on Pierre) or `status:ready` (accepted, set by Pierre only). Reading a triage issue moves it to `status:needs-decision`. Closing removes the status; a duplicate gets `Duplicate of #N` and is closed as one.
 - **Opening one:** search open issues first and comment on a match. A one-line title; a body of a few lines, no headings: for a bug, what happens, what was expected, how to see it, where (platform, version and build, or environment); for an idea, what and why, in the reporter's words. Observed evidence (an error, a log line) is fine.
-- **Never in an issue**, unless quoted from Pierre: a guessed cause, a fix, an implementation, a design, scope, acceptance criteria, tasks or a decision. Never the reporter's email, name or account id.
+- **Never in an issue**, unless explicitly requested or approved: a guessed cause, a fix, an implementation, a design, scope, acceptance criteria, tasks or a decision. Never the reporter's email, name or account id.
 
 ## Toolchain
 
