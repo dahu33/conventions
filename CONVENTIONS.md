@@ -45,6 +45,7 @@ A brief names what its round changes (screens, flows, routes, tables), the scena
 - **Evidence carries over** within a building round while its inputs are unchanged: a targeted check that passed on the same code, and on the same binary for a native check, is cited by its path and the commit it ran on, as evidence from that commit, not repeated and not a pass on the new commit. After a fix, rerun what failed and what covers the code the fix touched; an interrupted round resumes from its saved evidence and runs only what has no result yet. The full verification before merge never carries over this way.
 - **Code merged from `origin/main`** was verified in its own pull request: the merge puts at risk only the conflicts it resolved, the native code it brought and the places the round's change meets it. Check those, not the merged feature.
 - **Copy and translations** change what a screen says, not what it does: check the wording and its fit on each changed screen, not the feature behind it unless the round changed its code.
+- **Screenshots of a UI change.** A round that changes what a screen shows or how it behaves ends with one screenshot of each changed screen in its final state, default theme, kept small (about 400 px wide): the round looks at it to check what the accessibility snapshot can't show (layout, overlap, clipping, colour), shows it in the chat and attaches it to the pull request (`gh pr create` or `gh pr edit` with `--attach '<file>#<alt text>'`, gh 2.99 or later). One platform for a change common to the mobile app, iOS by preference; a change specific to Android or the web adds one there. A before-and-after only on request.
 - **The round stops** when the while-building checks have run on the final tree and each named scenario has a result: passed, failed with its evidence, or not done with the reason. A failure in what the round changed is fixed and rerun in the round; any other is reported, never waived, skipped or given a longer budget. A finding outside the round's scope is its own item in the report, not a reason to add checks.
 
 Every report is brief and gives: what was built or changed, by screen, flow, route or table; each command run and its result, and what was not run or not verified; what needs a real device (GPS, background work, sensors, battery, airplane mode), which is Pierre's to check; the choices made where the specs were silent; contradictions found in the specs; libraries added, with versions and why; migrations added, with the fixture that proves each.
@@ -63,7 +64,7 @@ Pierre's Mac has four test devices and no others: the iOS simulators `iphone-1` 
 - Power it off when done, after a failure too (the device tool's shutdown, `xcrun simctl shutdown <udid>` or `adb -s <serial> emu kill`): a device left on blocks the next session.
 - Never create, clone, rename or delete a simulator, an AVD, a runtime or a system image.
 - Metro runs on a port of the session's own (`--port`), never 8081. An iOS build also sets `RCT_METRO_PORT=<port>`, or its relaunch asks 8081, another session's Metro.
-- The accessibility snapshot first; a screenshot, kept small, only for what a snapshot can't show.
+- The accessibility snapshot first; a screenshot, kept small, only for what a snapshot can't show, such as the screenshots of a UI change.
 
 ## Data always moves forward
 
