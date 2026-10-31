@@ -80,6 +80,7 @@ An app updated over the air ships its local migrations in updates, not only with
 ## Environments are separable
 
 - Every stateful thing is per environment: the databases, the stores (files, caches, queues), the secrets, the mail sender, the domain and the trusted origins. Two environments never share one.
+- Every deployed thing (a service, a database, a store, a queue) is named after the product, since one account holds several products: production's name is the product's name, or the product's name and what the thing is, with no environment in it; every other environment's adds `-<environment>` at the end.
 - Product code knows no environment name: it reads its bindings and variables, the deploy configuration alone decides the environment, and the same build runs in every one.
 - An environment is created from configuration and a script (provision the stores, apply the migrations, put the secrets, deploy), never by hand; tearing one down leaves nothing behind.
 - Data moves between environments only by an explicit export and import, never by sharing.
