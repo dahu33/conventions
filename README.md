@@ -1,6 +1,6 @@
 # conventions
 
-The rules every one of my projects shares, in one file: [CONVENTIONS.md](CONVENTIONS.md). The instruction files themselves, spend, alignment, the pull request workflow, local verification, rounds and reports, tests and design checks, test devices, forward-only migrations, separable environments, specs, docs, issues, toolchain, agent skills, search noise, secrets.
+The rules every one of my projects shares, in one file: [CONVENTIONS.md](CONVENTIONS.md). The instruction files themselves, spend, alignment, the pull request workflow, local verification, rounds and reports, tests and design checks, test devices, forward-only migrations (over-the-air updates included), separable environments, specs, docs, issues, toolchain, agent skills, search noise, secrets.
 
 A project's own `AGENTS.md` holds only what is specific to that project. The sibling [skills](https://github.com/dahu33/skills) repository holds my personal agent skills; this one holds the conventions.
 

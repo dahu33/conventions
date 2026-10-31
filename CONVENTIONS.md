@@ -70,6 +70,13 @@ Pierre's Mac has four test devices and no others: the iOS simulators `iphone-1` 
 
 Every change to the shape of stored data (a table, a stored JSON document, a setting's value, any stored object) ships as a numbered, forward-only migration that rewrites existing data to the new shape, and product code knows one shape only. No compatibility branch, no read-time converter, no optional field standing in for a migration. A committed migration is never edited. What is a cache of something stored elsewhere is rebuilt or re-fetched, not migrated. Every brief that changes a stored shape names the migration; the builder's tests load a fixture of the previous shape and check it migrates. Names follow the project's naming rules; a new name that fits no row there is a question for Pierre.
 
+An app updated over the air ships its local migrations in updates, not only with store builds, under four rules:
+
+- The migrations run after the app's first view has drawn, so the update manager counts the launch and never rolls back onto migrated data.
+- Code never opens local data newer than itself: a release build shows a page asking to update, or to reopen later, touches nothing, and ends with the app's version, its update and both data versions; a development build carries on.
+- Native code that reads or writes that data checks a contract version of its own, which only a migration changing what it touches raises: only that migration needs a store build.
+- A broken update is fixed forward: a rollback or a revert never crosses a migration.
+
 ## Environments are separable
 
 - Every stateful thing is per environment: the databases, the stores (files, caches, queues), the secrets, the mail sender, the domain and the trusted origins. Two environments never share one.
