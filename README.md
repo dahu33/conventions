@@ -17,8 +17,14 @@ A project's own `AGENTS.md` holds only what is specific to that project. The sib
 
 The block goes before the project's first `##` section the first time, and replaces itself afterwards. Both tools read the file in every worktree on every machine with no install step, which is why it is a committed copy and not a submodule, a subtree or a machine-wide link. `sync.sh` refuses a checkout whose `AGENTS.md` is still a symlink or whose `CLAUDE.md` is a regular file: convert it first (`git rm AGENTS.md && git mv CLAUDE.md AGENTS.md && ln -s AGENTS.md CLAUDE.md`).
 
+The skills every project shares live in [skills/](skills), one folder each. `sync.sh` copies each into the project's `.agents/skills/`, with a line after the frontmatter of its `SKILL.md` naming the commit it came from, and links it from `.claude/skills/`; a skill removed here is removed from a project at its next sync. They have no entry in the project's `skills-lock.json`. Each is called by name only (`disable-model-invocation: true` for Claude Code, `allow_implicit_invocation: false` in `agents/openai.yaml` for Codex), so it loads when a person or the project's own skill asks for it.
+
+| Skill | What it does |
+| --- | --- |
+| [release-notes](skills/release-notes/SKILL.md) | Drafts a version's release notes for the app's users from what merged since the previous version |
+
 ```bash
-./sync.sh ~/git/perso/montopo ~/git/perso/osara   # update each checkout's AGENTS.md
+./sync.sh ~/git/perso/montopo ~/git/perso/osara   # update each checkout's AGENTS.md and shared skills
 ./sync.sh --check ~/git/perso/montopo             # exit 1 and say so if it is behind
 ```
 
