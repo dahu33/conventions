@@ -35,9 +35,9 @@ One file per version, `<notes folder>/<version>.json`, never edited once that ve
    - **For users**: a screen, a control, a flow, a wording, a map or data source, anything a user meets. It becomes an item.
    - **Felt**: internal work with an effect a user can notice (faster, smaller, less battery, fewer crashes, works offline, updates arrive without the store). It becomes an item saying the effect, never the cause.
    - **Internal**: everything else. No item.
-   - **Not public**: anything the convention's "Never" list names. No item, and nothing of it in another item.
+   - **Not public**: a feature that is unreleased or still hidden (behind a switch, for testers only, unreachable). No item; it waits for the version that shows it.
 
-   Several pull requests can make one item. A feature that is still hidden (behind a switch, for testers only, unreachable) waits for the version that shows it. A bug introduced and fixed within the range is not an item.
+   An item never carries a detail the convention's "Never" list names: leave the detail out and keep the effect (a security fix is "security improved", a faster provider is "faster"). Several pull requests can make one item. A bug introduced and fixed within the range is not an item.
 4. **Cut to five**: merge related items, drop the least noticeable.
 5. **Write for someone who uses the app**: what they can now do, or what now works, with the names the app's screens show. Plain words, "you" where it helps, no jargon, no marketing words, no exclamation marks. Name a platform only for an item that concerns one ("On Android, …").
 6. **Check each item against the "Never" list.** As a last net, search the texts for `#`, `/`, backticks, `@`, camelCase and version numbers; each hit is a leak until shown otherwise.
