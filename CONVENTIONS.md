@@ -83,6 +83,7 @@ An app updated over the air ships its local migrations in updates, not only with
 - Every deployed thing (a service, a database, a store, a queue) is named after the product, since one account holds several products: production's name is the product's name, or the product's name and what the thing is, with no environment in it; every other environment's adds `-<environment>` at the end.
 - Product code knows no environment name: it reads its bindings and variables, the deploy configuration alone decides the environment, and the same build runs in every one.
 - An environment is created from configuration and a script (provision the stores, apply the migrations, put the secrets, deploy), never by hand; tearing one down leaves nothing behind.
+- Every deployed environment answers on HTTPS only: a request over `http://` is redirected to `https://` before it reaches anything, browsers are told to stay on HTTPS (HSTS), and the environment's script sets this up and checks the redirect.
 - Data moves between environments only by an explicit export and import, never by sharing.
 - Everything runs locally with every binding simulated: no code path works only when deployed, and no environment switches identity or auth off.
 
