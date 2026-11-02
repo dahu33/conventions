@@ -37,4 +37,5 @@ The projects that carry it:
 
 - [montopo](https://github.com/dahu33/montopo): an outdoor map app, offline topographic maps and GPS tracks, on Expo and Cloudflare.
 - [osara](https://github.com/dahu33/osara): a household-cooking app with an AI assistant, on Expo and Cloudflare.
-- [dowise](https://github.com/dahu33/dowise): a Splitwise-style app for shared expenses, on Expo and Cloudflare.
+- [tabtomo](https://github.com/dahu33/tabtomo): a Splitwise-style app for shared expenses, on Expo and Cloudflare.
+- [expo-updates-server](https://github.com/dahu33/expo-updates-server): the self-hosted over-the-air update service the apps share, on Cloudflare.
