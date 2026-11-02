@@ -89,6 +89,18 @@ An app updated over the air ships its local migrations in updates, not only with
 - Data moves between environments only by an explicit export and import, never by sharing.
 - Everything runs locally with every binding simulated: no code path works only when deployed, and no environment switches identity or auth off.
 
+## Crash reports
+
+Every app and every Worker reports its errors to Sentry (sentry.io, on its free plan): one project per app, `<product>-app`, for iOS, Android and the web, and one per Worker, `<product>-<worker>`.
+
+- **Errors only:** native and JavaScript crashes, errors caught and reported, unhandled rejections, iOS hangs and Android ANRs. No sessions, tracing, profiling, replay, logs or feedback widget.
+- **Release builds of a deployed environment send, tagged with it;** development builds, local runs and tests never do. The DSN comes from the build or deploy configuration, and without one Sentry is not started.
+- **A report names the signed-in account by its id, and nothing else about the person:** no email, name, IP address, position, user content, request body, header, cookie or query string. Breadcrumbs keep navigation, without parameters, and the app's lifecycle; console, network and touch breadcrumbs are off.
+- **Always on:** no setting turns it off. The privacy page says what a report holds, and the store privacy forms declare crash and diagnostic data linked to the account.
+- **No background work of its own:** no timer, no network request and no JavaScript while the app is in the background; a crash is sent at the next launch.
+- **A loop never spends the month:** an app sends each distinct error once per launch and at most 25 reports per launch; a Worker sends each distinct error at most once a minute per isolate.
+- **Symbols ship with the code:** a release build or an over-the-air update that carries a DSN uploads its source maps and native symbols, or fails.
+
 ## Specs
 
 - Each requirement lives in exactly one file; other files link to it. Every spec separates confirmed behaviour, what is assumed or under exploration, and open questions.
