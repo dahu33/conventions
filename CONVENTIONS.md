@@ -108,8 +108,8 @@ An app updated over the air ships its local migrations in updates, not only with
 ## Release notes
 
 - Every release of an app, a store build or an over-the-air update, raises the app's version, and every version has its release notes, committed in the pull request that raises it, so Pierre reads them before anything ships. The release refuses a version already released or one without notes.
-- The `release-notes` skill drafts them, in English; other languages follow the project's translation rule. They speak to the app's users: at most five short items, each new, improved or fixed, in plain words. A version with nothing a user would notice has no items.
-- The app shows the notes of the versions it hasn't shown yet, once, after an update; never after a fresh install. A store build's release text joins the notes of every version since the previous store build.
+- The `release-notes` skill drafts them, in English; other languages follow the project's translation rule. They speak to the app's users: at most five short items, each new, improved or fixed, with an icon, a short title and one plain sentence. A version with nothing a user would notice has no items.
+- After an update, the app shows once what is new or improved in the versions it hasn't shown yet, as one list of highlights, with the fixes summed up in a line; an update that brings only fixes shows nothing. It never shows after a fresh install, and every version's notes stay readable in the app. A store build's release text joins the notes of every version since the previous store build.
 - **Never in release notes:** work a user can't notice (conventions, specs, plans, docs, tooling, tests, CI, refactors, release mechanics); a name the app's screens don't show (a provider, service, account, file, issue or pull request) or a cost; a feature that is unreleased, hidden or for testers only; how a security problem worked, only that security improved; who reported something. Internal work a user can feel is said as its effect.
 
 ## Toolchain
