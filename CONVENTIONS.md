@@ -91,15 +91,15 @@ An app updated over the air ships its local migrations in updates, not only with
 
 ## Crash reports
 
-Every app and every Worker reports its errors to Sentry (sentry.io, on its free plan): one project per app, `<product>-app`, for iOS, Android and the web, and one per Worker, `<product>-<worker>`.
+Every app and every Worker reports its errors to Sentry (sentry.io, on its free plan). Sentry projects are per environment and named like any deployed thing: `<product>-app` for the app (iOS, Android and the web) and `<product>-<worker>` for each Worker, with `-<environment>` added outside production.
 
 - **Errors only:** native and JavaScript crashes, errors caught and reported, unhandled rejections, iOS hangs and Android ANRs. No sessions, tracing, profiling, replay, logs or feedback widget.
-- **Release builds of a deployed environment send, tagged with it;** development builds, local runs and tests never do. The DSN comes from the build or deploy configuration, and without one Sentry is not started.
-- **A report names the signed-in account by its id, and nothing else about the person:** no email, name, IP address, position, user content, request body, header, cookie or query string. Breadcrumbs keep navigation, without parameters, and the app's lifecycle; console, network and touch breadcrumbs are off.
+- **Release builds send; nothing else does.** Development builds, local runs and tests never send, and Sentry is not started without a DSN. The DSN comes from the build or deploy configuration; a release build, an over-the-air update or a Worker deploy for a deployed environment fails without one.
+- **A report names the signed-in account by its id, and nothing else about the person:** no email, name, IP address, position, user content, request body, header, cookie or query string, in JavaScript and native reports alike. Breadcrumbs keep navigation, without parameters, and the app's lifecycle; console, network and touch breadcrumbs are off, native ones included.
 - **Always on:** no setting turns it off. The privacy page says what a report holds, and the store privacy forms declare crash and diagnostic data linked to the account.
-- **No background work of its own:** no timer, no network request and no JavaScript while the app is in the background; a crash is sent at the next launch.
-- **A loop never spends the month:** an app sends each distinct error once per launch and at most 25 reports per launch; a Worker sends each distinct error at most once a minute per isolate.
-- **Symbols ship with the code:** a release build or an over-the-air update that carries a DSN uploads its source maps and native symbols, or fails.
+- **No background work of its own:** while the app is in the background, Sentry runs no JavaScript and no timer or watchdog, and sends only reports already captured; a crash is sent at the next launch.
+- **A loop is damped:** an error is the same when its type, its message and the top frame of the app's own code match. An app sends each error once per launch (a process start) and at most 25 reported errors per launch; crashes are always sent. A Worker sends each error at most once a minute per isolate.
+- **Symbols ship before the code:** every JavaScript bundle (the app's, the website's, each Worker's) uploads its source maps, and every store build its native symbols and R8 mappings, before the build, the update or the deploy is published; if an upload fails, nothing is published.
 
 ## Specs
 
