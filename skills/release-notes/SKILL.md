@@ -24,6 +24,7 @@ One file per version, `<notes folder>/<version>.json`, never edited once that ve
     },
     {
       "kind": "fixed",
+      "announce": true,
       "icon": "edit",
       "title": { "en": "Forms keep your text" },
       "text": { "en": "Text typed in a form is no longer lost when the keyboard closes." }
@@ -34,15 +35,16 @@ One file per version, `<notes folder>/<version>.json`, never edited once that ve
 
 - `version` is the app's version, as its config sets it.
 - `kind` is `new`, `improved` or `fixed`. Items go in that order, the most noticeable first within a kind.
+- `announce: true`, on a `fixed` item only, marks a fix someone may have been waiting for: it closes an issue labelled `source:feedback`, or it ends lost data, a crash, or a main task that didn't work. Other fixes leave it out.
 - `icon` is one of the names in `<notes folder>/icons.json`, the project's list: the one that best says what the item is about.
 - `title` is a headline of two to four words, at most 30 characters in English, no full stop: what a person scanning the list reads first. `text` is one sentence ending in a full stop, at most 90 characters in English, that says what it does for them; it stands alone, without the title (the store text uses it alone). Both are keyed by the app's language tags: `en` always, others as the translation rule says.
 - `items` is empty when nothing in the version is for users; the app then shows nothing.
-- After an update the app lists the new and improved items of every version not yet shown, and sums up the fixed ones in a line; it opens nothing for a version that only fixes. Every item stays readable in the app's list of versions.
+- After an update the app lists the new, improved and announced items of every version not yet shown, and sums up the other fixes in a line; it opens nothing when those other fixes are all there is. Every item stays readable in the app's list of versions.
 
 ## Steps
 
 1. **The range.** Fetch, then take the commits from the one that added the previous version's notes file (`git log -1 --diff-filter=A --format=%H -- '<notes folder>/<previous version>.json'`) to `origin/main`. With no earlier file, start at the previous release's commit.
-2. **What merged.** `git log --first-parent --format='%h %s' <from>..origin/main` lists one squash commit per pull request. For each, `gh pr view <n> --json title,body,closingIssuesReferences`; an issue it closes labelled `source:feedback` was reported by a user, so its fix is worth an item. Read the diff only when the title and body don't say what a user sees.
+2. **What merged.** `git log --first-parent --format='%h %s' <from>..origin/main` lists one squash commit per pull request. For each, `gh pr view <n> --json title,body,closingIssuesReferences`; an issue it closes labelled `source:feedback` was reported by a user, so its fix is worth an item, announced. Read the diff only when the title and body don't say what a user sees.
 3. **Sort each pull request**:
    - **For users**: a screen, a control, a flow, a wording, a map or data source, anything a user meets. It becomes an item.
    - **Felt**: internal work with an effect a user can notice (faster, smaller, less battery, fewer crashes, works offline, updates arrive without the store). It becomes an item saying the effect, never the cause.
