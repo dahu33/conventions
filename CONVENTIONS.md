@@ -89,6 +89,18 @@ An app updated over the air ships its local migrations in updates, not only with
 - Data moves between environments only by an explicit export and import, never by sharing.
 - Everything runs locally with every binding simulated: no code path works only when deployed, and no environment switches identity or auth off.
 
+## Crash reports
+
+Every app and every Worker reports its errors to Sentry (sentry.io, on its free plan). Sentry projects are per environment and named like any deployed thing: `<product>-app` for the app (iOS, Android and the web) and `<product>-<worker>` for each Worker, with `-<environment>` added outside production.
+
+- **Errors only:** native and JavaScript crashes, errors caught and reported, unhandled rejections, iOS hangs and Android ANRs. No sessions, tracing, profiling, replay, logs or feedback widget.
+- **Release builds send; nothing else does.** Development builds, local runs and tests never send, and Sentry is not started without a DSN. The DSN comes from the build or deploy configuration; a release build, an over-the-air update or a Worker deploy for a deployed environment fails without one.
+- **A report names the signed-in account by its id, and nothing else about the person:** no email, name, IP address, position, user content, request body, header, cookie or query string, in JavaScript and native reports alike. Breadcrumbs keep navigation, without parameters, and the app's lifecycle; console, network and touch breadcrumbs are off, native ones included.
+- **Always on:** no setting turns it off. The privacy page says what a report holds, and the store privacy forms declare crash and diagnostic data linked to the account.
+- **No background work of its own:** while the app is in the background, Sentry runs no JavaScript and no timer, and sends only reports already captured; a crash is sent at the next launch. An app that keeps running in the background turns off any hang or ANR watchdog that keeps polling there; the system's own reports (Android's exit reasons, iOS's MetricKit) still count.
+- **A loop is damped:** an error is the same when its type, its message and the top frame of the app's own code match. An app sends each error once per launch (a process start) and at most 25 reported errors per launch; crashes are always sent. A Worker sends each error at most once a minute per isolate.
+- **Symbols ship before the code:** every JavaScript bundle (the app's, the website's, each Worker's) uploads its source maps, and every store build its native symbols and R8 mappings, before the build, the update or the deploy is published; if an upload fails, nothing is published.
+
 ## Specs
 
 - Each requirement lives in exactly one file; other files link to it. Every spec separates confirmed behaviour, what is assumed or under exploration, and open questions.
