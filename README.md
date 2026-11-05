@@ -28,6 +28,10 @@ The skills every project shares live in [skills/](skills), one folder each. `syn
 ./sync.sh --check ~/git/perso/montopo             # exit 1 and say so if it is behind
 ```
 
+## Set up a Mac for native builds
+
+Once per Mac, from this checkout, so the Expo apps' native builds share a compile cache across worktrees: `./setup-mac-build-caches.sh`, or `./setup-mac-build-caches.sh <folder>` when the worktrees aren't in `~/.t3/worktrees`. It installs ccache, adds a block to `~/.zshenv` and sets Xcode's DerivedData location; a Mac without it builds the same apps, only slower. Its comments say why each step is there.
+
 ## Change a convention
 
 1. Change `CONVENTIONS.md` here on its own branch and squash-merge the pull request.
