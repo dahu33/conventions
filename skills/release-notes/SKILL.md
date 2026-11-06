@@ -55,8 +55,9 @@ One file per version, `<notes folder>/<version>.json`, never edited once that ve
 4. **Cut to five**: merge related items, drop the least noticeable.
 5. **Write for someone who uses the app**: what they can now do, or what now works, with the names the app's screens show. Plain words, "you" where it helps, no jargon, no marketing words, no exclamation marks. Name a platform only for an item that concerns one ("On Android, …"). A title names the thing as the app's screens do ("Download along a route", not "Corridor downloads v2").
 6. **Check each item against the "Never" list.** As a last net, search the titles and texts for `#`, `/`, backticks, `@`, camelCase and version numbers; each hit is a leak until shown otherwise.
-7. **Translate** only where the translation rule asks for it now, titles and texts alike; otherwise English alone.
-8. **Commit** the file in the pull request that raises the version. Add a table to its body: each pull request in the range, and what became of it (item 2, merged into item 2, internal, not public), so Pierre can check both before the release.
+7. **Ask Pierre.** Print each item in English and a table of each pull request in the range and what became of it (item 2, merged into item 2, internal, not public), then stop and ask whether the notes are OK with the session's question tool (without one, a plain question, then wait). Asking for a release doesn't approve its notes. If he asks for changes, make them and ask again. Nothing is translated, committed, verified or merged before he approves, and a later change to the English needs his approval again.
+8. **Translate** only where the translation rule asks for it now, titles and texts alike; otherwise English alone.
+9. **Commit** the file in the pull request that raises the version, with the table in its body.
 
 ## Store text
 
