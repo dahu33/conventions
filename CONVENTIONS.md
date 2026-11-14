@@ -92,6 +92,13 @@ An app updated over the air ships its local migrations in updates, not only with
 - Data moves between environments only by an explicit export and import, never by sharing.
 - Everything runs locally with every binding simulated: no code path works only when deployed, and no environment switches identity or auth off.
 
+## App version
+
+Every request an app sends to its own backend carries `<Product>-Version`, the product's name in title case: the version of the code running (the over-the-air update's when one runs), as bare semver, nothing else. Never the User-Agent.
+
+- The backend reads it only to answer each version what it can read. A missing or malformed value counts as the oldest version.
+- A browser request that can't carry a header, such as a WebSocket, leaves it out: the web always runs the latest code.
+
 ## Crash reports
 
 Every app and every Worker reports its errors to Sentry (sentry.io, on its free plan). Sentry projects are per environment and named like any deployed thing: `<product>-app` for the app (iOS, Android and the web) and `<product>-<worker>` for each Worker, with `-<environment>` added outside production.
