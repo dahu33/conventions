@@ -98,6 +98,7 @@ Every request an app sends to its own backend carries `<Product>-Version`, the p
 
 - The backend reads it only to answer each version what it can read. A missing or malformed value counts as the oldest version.
 - A browser request that can't carry a header, such as a WebSocket, leaves it out: the web always runs the latest code.
+- A request a library makes under its own protocol, such as an update check, keeps that protocol's headers.
 
 ## Crash reports
 
