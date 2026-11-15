@@ -1,7 +1,6 @@
 ---
 name: release-notes
 description: Draft an app version's release notes for its users from what merged since the previous version, and write them to the project's notes file. Called by name, or from the project's release skill when a version is raised.
-disable-model-invocation: true
 ---
 
 # Release notes
