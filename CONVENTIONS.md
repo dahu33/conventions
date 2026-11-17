@@ -85,7 +85,7 @@ An app updated over the air ships its local migrations in updates, not only with
 ## Text people type
 
 - Text a person or an assistant types is cleaned on its way in, by one rule in the project's shared code, at every door: the request schemas, and the hooks of any library that stores text itself. The app cleans the same way before sending. Nothing is cleaned or rewritten on its way out.
-- The rule drops control characters, every `Default_Ignorable_Code_Point` character except the zero-width joiner and non-joiner and the variation selectors, and lone surrogates; it then stores the text in NFC, trimmed. A tab becomes a space. A line break (LF, CR LF, CR, U+2028, U+2029) is dropped from single-line text and stored as LF in multi-line text. A length limit counts the cleaned text. What is dropped goes quietly, with no warning.
+- The rule drops control characters, every `Default_Ignorable_Code_Point` character except the zero-width joiner and non-joiner, the variation selectors and the tag characters of an `RGI_Emoji_Tag_Sequence` (the subdivision flags), and lone surrogates; it then stores the text in NFC, trimmed. A tab becomes a space. A line break (LF, CR LF, CR, U+2028, U+2029) is dropped from single-line text and stored as LF in multi-line text. A length limit counts the cleaned text. What is dropped goes quietly, with no warning.
 - A name needs a visible character; one without counts as empty.
 - Comparisons (duplicates, lookups, search) fold width, case and accents (NFKC); stored text is never folded.
 - Lookalike letters from other scripts are checked only for unique identifiers, such as handles, never for display names.
