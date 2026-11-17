@@ -82,6 +82,17 @@ An app updated over the air ships its local migrations in updates, not only with
 - Native code that reads or writes that data checks a contract version of its own, which only a migration changing what it touches raises: only that migration needs a store build.
 - A broken update is fixed forward: a rollback or a revert never crosses a migration.
 
+## Text people type
+
+- Text a person or an assistant types is cleaned on its way in, by one rule in the project's shared code, at every door: the request schemas, and the hooks of any library that stores text itself. The app cleans the same way before sending. Nothing is cleaned or rewritten on its way out.
+- The rule drops control characters (multi-line text keeps its line breaks, a tab becomes a space), every `Default_Ignorable_Code_Point` character except the zero-width joiner and non-joiner, the variation selectors and the tag characters, and lone surrogates; it then stores the text in NFC, trimmed. A length limit counts the cleaned text. What is dropped goes quietly, with no warning.
+- A name needs a visible character; one without counts as empty.
+- Comparisons (duplicates, lookups, search) fold width, case and accents (NFKC); stored text is never folded.
+- Lookalike letters from other scripts are checked only for unique identifiers, such as handles, never for display names.
+- Each output escapes for itself: HTML is escaped, a CSV cell a spreadsheet would run as a formula starts with `'`, and typed text in an email header stays on one line.
+- Changing the rule cleans the stored text with a migration, as Data always moves forward says.
+- Adding a right-to-left language also isolates typed text placed inside a sentence, between U+2068 and U+2069.
+
 ## Environments are separable
 
 - Every stateful thing is per environment: the databases, the stores (files, caches, queues), the secrets, the mail sender, the domain and the trusted origins. Two environments never share one.
